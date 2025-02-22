@@ -1,7 +1,7 @@
-// import { ReturnStatement } from './../node_modules/acorn/dist/acorn.d';
 export interface Figure {
   shape: string;
   color: 'red' | 'green' | 'blue';
+
   getArea(): number;
 }
 
@@ -22,13 +22,14 @@ export class Triangle implements Figure {
     b: number,
     c: number,
   ) {
-    if (a <= 0 && b <= 0 && c <= 0) {
-      throw new Error('your error message');
+    if (a <= 0 || b <= 0 || c <= 0) {
+      throw new Error('Sides must be greater than zero');
     }
 
-    if (a >= b + c || b >= a + c || c >= a + b) {
-      throw new Error('Biggest');
+    if (a + b <= c || a + c <= b || b + c <= a) {
+      throw new Error(`Sides ${a}, ${b} and ${c} can't form a triangle`);
     }
+
     this.color = color;
     this.a = a;
     this.b = b;
@@ -51,12 +52,13 @@ export class Circle implements Figure {
 
   radius: number;
 
-  constructor(color: 'red' | 'green' | 'blue', radius) {
+  constructor(color: 'red' | 'green' | 'blue', radius: number) {
     if (radius <= 0) {
       throw new Error('Radius must be greater than zero');
     }
-    this.radius = radius;
+
     this.color = color;
+    this.radius = radius;
   }
 
   getArea(): number {
@@ -77,9 +79,10 @@ export class Rectangle implements Figure {
     if (width <= 0 || height <= 0) {
       throw new Error('Width and height must be greater than zero');
     }
+
+    this.color = color;
     this.width = width;
     this.height = height;
-    this.color = color;
   }
 
   getArea(): number {
@@ -87,6 +90,6 @@ export class Rectangle implements Figure {
   }
 }
 
-export function getInfo(figure): string {
+export function getInfo(figure: Figure): string {
   return `A ${figure.color} ${figure.shape} - ${figure.getArea()}`;
 }
